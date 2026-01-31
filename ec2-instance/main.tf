@@ -76,12 +76,10 @@ data "aws_ami" "amazon_linux" {
   }
 }
 
-# Ler a vpc default da aws
 data "aws_vpc" "default" {
   default = true
 }
 
-# Ler a subnet default da aws
 data "aws_subnet" "default" {
   default_for_az    = true
   availability_zone = "us-east-1a"
