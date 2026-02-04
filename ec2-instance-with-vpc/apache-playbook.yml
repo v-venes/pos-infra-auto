@@ -1,119 +1,120 @@
-name: Instalar Apache e configurar página inicial - Ubuntu 22.04
-hosts: ec2_instances
-become: yes
-  
-tasks:
-  - name: Atualizar cache do apt
-    apt:
-      update_cache: yes
-      cache_valid_time: 3600
-  
-  - name: Instalar Apache2
-    apt:
-      name: apache2
-      state: present
-      update_cache: yes
-  
-  - name: Criar arquivo index.html personalizado
-    copy:
-      content: |
-        <!DOCTYPE html>
-        <html lang="pt-BR">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Bem-vindo ao Apache no EC2</title>
-            <style>
-                * {
-                    margin: 0;
-                    padding: 0;
-                    box-sizing: border-box;
-                }
-                body {
-                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    min-height: 100vh;
-                    padding: 20px;
-                }
-                .container {
-                    background: white;
-                    padding: 50px;
-                    border-radius: 15px;
-                    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-                    text-align: center;
-                    max-width: 600px;
-                }
-                h1 {
-                    color: #667eea;
-                    margin-bottom: 20px;
-                    font-size: 2.5em;
-                }
-                .success {
-                    color: #10b981;
-                    font-size: 1.2em;
-                    margin: 15px 0;
-                }
-                .info {
-                    background: #f3f4f6;
-                    padding: 20px;
-                    border-radius: 10px;
-                    margin-top: 25px;
-                }
-                .info p {
-                    color: #374151;
-                    margin: 10px 0;
-                    line-height: 1.6;
-                }
-                .info strong {
-                    color: #667eea;
-                }
-                .badge {
-                    display: inline-block;
-                    background: #667eea;
-                    color: white;
-                    padding: 5px 15px;
-                    border-radius: 20px;
-                    font-size: 0.9em;
-                    margin-top: 15px;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <h1>🚀 Servidor Apache Ativo!</h1>
-                <p class="success">✅ Configurado com sucesso via Ansible</p>
-                <div class="info">
-                    <p><strong>Sistema Operacional:</strong> Ubuntu 22.04 LTS</p>
-                    <p><strong>Servidor Web:</strong> Apache2</p>
-                    <p><strong>Hostname:</strong> {{ ansible_hostname }}</p>
-                    <p><strong>IP:</strong> {{ ansible_default_ipv4.address }}</p>
-                </div>
-                <span class="badge">EC2 Instance</span>
-            </div>
-        </body>
-        </html>
-      dest: /var/www/html/index.html
-      mode: '0644'
-      owner: www-data
-      group: www-data
-  
-  - name: Garantir que Apache2 está iniciado e habilitado
-    service:
-      name: apache2
-      state: started
-      enabled: yes
-  
-  - name: Verificar status do Apache2
-    command: systemctl status apache2
-    register: apache_status
-    changed_when: false
-    ignore_errors: yes
-  
-  - name: Exibir informações do Apache
-    debug:
-      msg: 
-        - "Apache2 instalado e configurado com sucesso!"
-        - "Acesse: http://{{ ansible_default_ipv4.address }}"
+---
+- name: Instalar Apache e configurar página inicial - Ubuntu 22.04
+  hosts: ec2_instances
+  become: yes
+    
+  tasks:
+    - name: Atualizar cache do apt
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+    
+    - name: Instalar Apache2
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+    
+    - name: Criar arquivo index.html personalizado
+      copy:
+        content: |
+          <!DOCTYPE html>
+          <html lang="pt-BR">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Bem-vindo ao Apache no EC2</title>
+              <style>
+                  * {
+                      margin: 0;
+                      padding: 0;
+                      box-sizing: border-box;
+                  }
+                  body {
+                      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      min-height: 100vh;
+                      padding: 20px;
+                  }
+                  .container {
+                      background: white;
+                      padding: 50px;
+                      border-radius: 15px;
+                      box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+                      text-align: center;
+                      max-width: 600px;
+                  }
+                  h1 {
+                      color: #667eea;
+                      margin-bottom: 20px;
+                      font-size: 2.5em;
+                  }
+                  .success {
+                      color: #10b981;
+                      font-size: 1.2em;
+                      margin: 15px 0;
+                  }
+                  .info {
+                      background: #f3f4f6;
+                      padding: 20px;
+                      border-radius: 10px;
+                      margin-top: 25px;
+                  }
+                  .info p {
+                      color: #374151;
+                      margin: 10px 0;
+                      line-height: 1.6;
+                  }
+                  .info strong {
+                      color: #667eea;
+                  }
+                  .badge {
+                      display: inline-block;
+                      background: #667eea;
+                      color: white;
+                      padding: 5px 15px;
+                      border-radius: 20px;
+                      font-size: 0.9em;
+                      margin-top: 15px;
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <h1>🚀 Servidor Apache Ativo!</h1>
+                  <p class="success">✅ Configurado com sucesso via Ansible</p>
+                  <div class="info">
+                      <p><strong>Sistema Operacional:</strong> Ubuntu 22.04 LTS</p>
+                      <p><strong>Servidor Web:</strong> Apache2</p>
+                      <p><strong>Hostname:</strong> {{ ansible_hostname }}</p>
+                      <p><strong>IP:</strong> {{ ansible_default_ipv4.address }}</p>
+                  </div>
+                  <span class="badge">EC2 Instance</span>
+              </div>
+          </body>
+          </html>
+        dest: /var/www/html/index.html
+        mode: '0644'
+        owner: www-data
+        group: www-data
+    
+    - name: Garantir que Apache2 está iniciado e habilitado
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+    
+    - name: Verificar status do Apache2
+      command: systemctl status apache2
+      register: apache_status
+      changed_when: false
+      ignore_errors: yes
+    
+    - name: Exibir informações do Apache
+      debug:
+        msg: 
+          - "Apache2 instalado e configurado com sucesso!"
+          - "Acesse: http://{{ ansible_default_ipv4.address }}"
